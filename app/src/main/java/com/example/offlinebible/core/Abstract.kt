@@ -1,5 +1,9 @@
 package com.example.offlinebible.core
 
+
+/**
+ * @author stranger11 on 05.09.2022
+ **/
 abstract class Abstract {
 
     interface Object<T, M : Mapper> {
