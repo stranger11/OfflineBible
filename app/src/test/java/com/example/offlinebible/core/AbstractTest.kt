@@ -2,6 +2,7 @@ package com.example.offlinebible.core
 
 import junit.framework.Assert.assertTrue
 import org.junit.Test
+import java.io.IOException
 
 
 class AbstractTest {
@@ -11,6 +12,13 @@ class AbstractTest {
         val dataObject = TestDataObject.Success("a", "b")
         val domainObject = dataObject.map(DataToDomainMapper.Base())
         assertTrue(domainObject is DomainObject.Success)
+    }
+
+    @Test
+    fun test_fail() {
+        val dataObject = TestDataObject.Fail(IOException())
+        val domainObject = dataObject.map(DataToDomainMapper.Base())
+        assertTrue(domainObject is DomainObject.Fail)
     }
 
     private sealed class TestDataObject : Abstract.Object<DomainObject, DataToDomainMapper>() {
