@@ -1,12 +1,12 @@
 package com.example.offlinebible.domain
 
 import com.example.offlinebible.core.Abstract
-import com.example.offlinebible.data.net.BookServerModel
+import com.example.offlinebible.data.net.BookCloud
 import com.example.offlinebible.presentation.BookUi
 
 sealed class BookDomain : Abstract.Object<BookUi, BookDomainToUiMapper>() {
 
-    class Success(private val books: List<BookServerModel>) : BookDomain() {
+    class Success(private val books: List<BookCloud>) : BookDomain() {
         override fun map(mapper: BookDomainToUiMapper): BookUi {
             TODO("Not yet implemented")
         }
