@@ -2,6 +2,6 @@ package com.example.offlinebible.presentation
 
 import com.example.offlinebible.core.Abstract
 
-sealed class BookUi : Abstract.Object<Unit, Abstract.Mapper.Empty>() {
+sealed class BooksUi : Abstract.Object<Unit, Abstract.Mapper.Empty>() {
     //todo
 }

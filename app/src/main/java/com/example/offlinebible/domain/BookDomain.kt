@@ -1,23 +1,27 @@
 package com.example.offlinebible.domain
 
 import com.example.offlinebible.core.Abstract
-import com.example.offlinebible.data.net.BookCloud
-import com.example.offlinebible.presentation.BookUi
+import com.example.offlinebible.core.Book
+import com.example.offlinebible.presentation.BooksUi
+import retrofit2.HttpException
+import java.lang.Exception
+import java.net.UnknownHostException
 
-sealed class BookDomain : Abstract.Object<BookUi, BookDomainToUiMapper>() {
 
-    class Success(private val books: List<BookCloud>) : BookDomain() {
-        override fun map(mapper: BookDomainToUiMapper): BookUi {
-            TODO("Not yet implemented")
-        }
-
+//todo rename to bookS
+sealed class BookDomain : Abstract.Object<BooksUi, BooksDomainToUiMapper>() {
+    class Success(private val books: List<Book>) : BookDomain() {
+        override fun map(mapper: BooksDomainToUiMapper): BooksUi = mapper.map(books)
     }
 
-    class Fail(errorType: Int) : BookDomain() {
-        override fun map(mapper: BookDomainToUiMapper): BookUi {
-            TODO("Not yet implemented")
-        }
-
+    class Fail(private val e: Exception) : BookDomain() {
+        override fun map(mapper: BooksDomainToUiMapper) = mapper.map(
+            when (e) {
+                is UnknownHostException -> ErrorType.NO_CONNECTION
+                is HttpException -> ErrorType.SERVICE_UNAVAILABLE
+                else -> ErrorType.GENERIC_ERROR
+            }
+        )
     }
 
 }
