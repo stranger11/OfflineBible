@@ -52,7 +52,8 @@ class BibleApp : Application() {
             BaseBooksDomainToUiMapper(
                 BooksCommunication.Base(),
                 ResourceProvider.Base(this)
-            )
+            ),
+            BooksCommunication.Base()
         )
     }
 }
