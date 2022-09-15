@@ -1,6 +1,7 @@
 package com.example.offlinebible.core
 
 import android.app.Application
+import androidx.lifecycle.ViewModel
 import com.example.offlinebible.data.BooksCloudDataSource
 import com.example.offlinebible.data.BooksCloudMapper
 import com.example.offlinebible.data.BooksRepository
@@ -10,9 +11,16 @@ import com.example.offlinebible.data.cache.BooksCacheMapper
 import com.example.offlinebible.data.cache.RealmProvider
 import com.example.offlinebible.data.net.BookCloudMapper
 import com.example.offlinebible.data.net.BooksService
+import com.example.offlinebible.domain.BooksInteractor
+import com.example.offlinebible.presentation.BaseBooksDomainToUiMapper
+import com.example.offlinebible.presentation.BooksCommunication
+import com.example.offlinebible.presentation.MainViewModel
+import com.example.offlinebible.presentation.ResourceProvider
 import retrofit2.Retrofit
 
 class BibleApp : Application() {
+
+    lateinit var mainViewModel: MainViewModel
 
     private companion object {
         const val BASE_URL = "https://bible-go-api.rkeplin.com/v1/"
@@ -36,6 +44,15 @@ class BibleApp : Application() {
             cacheDataSource,
             booksCloudMapper,
             booksCacheMapper
+        )
+
+        val booksInteractor: BooksInteractor = TODO()
+        mainViewModel = MainViewModel(
+            booksInteractor,
+            BaseBooksDomainToUiMapper(
+                BooksCommunication.Base(),
+                ResourceProvider.Base(this)
+            )
         )
     }
 }
