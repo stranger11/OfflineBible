@@ -13,7 +13,6 @@ class BibleAdapter : RecyclerView.Adapter<BibleAdapter.BibleViewHolder>(){
 
    private val books = ArrayList<Book>()
 
-    @SuppressLint("NotifyDataSetChanged")
     fun update(new: List<Book>) {
         books.clear()
         books.addAll(new)
@@ -27,8 +26,7 @@ class BibleAdapter : RecyclerView.Adapter<BibleAdapter.BibleViewHolder>(){
 
     override fun onBindViewHolder(holder: BibleViewHolder, position: Int) = holder.bind(books[position])
 
-    override fun getItemCount(): Int =
-       books.size
+    override fun getItemCount(): Int = books.size
 
     inner class BibleViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         fun bind(book: Book) {

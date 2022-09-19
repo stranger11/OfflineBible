@@ -20,7 +20,7 @@ interface BooksRepository {
                 val booksCloudList = cloudDataSource.fetchBooks()
                 val books = booksCloudMapper.map(booksCloudList)
                 cacheDataSource.saveBooks(books)
-                BooksData.Success(booksCloudMapper.map(booksCloudList))
+                BooksData.Success(books)
             } else {
                 BooksData.Success(booksCacheMapper.map(booksCacheList))
             }

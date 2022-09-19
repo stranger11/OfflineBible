@@ -18,10 +18,9 @@ class MainActivity : AppCompatActivity() {
         val adapter = BibleAdapter()
         recyclerView.adapter = adapter
 
-        viewModel.observe(this, Observer {
+        viewModel.observe(this) {
             adapter.update(it)
-        })
-
+        }
         viewModel.fetchBooks()
 
         //todo observe fail

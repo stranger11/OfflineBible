@@ -1,7 +1,6 @@
 package com.example.offlinebible.core
 
 import android.app.Application
-import androidx.lifecycle.ViewModel
 import com.example.offlinebible.data.BooksCloudDataSource
 import com.example.offlinebible.data.BooksCloudMapper
 import com.example.offlinebible.data.BooksRepository
@@ -11,12 +10,17 @@ import com.example.offlinebible.data.cache.BooksCacheMapper
 import com.example.offlinebible.data.cache.RealmProvider
 import com.example.offlinebible.data.net.BookCloudMapper
 import com.example.offlinebible.data.net.BooksService
+import com.example.offlinebible.domain.BaseBooksDataToDomainMapper
 import com.example.offlinebible.domain.BooksInteractor
 import com.example.offlinebible.presentation.BaseBooksDomainToUiMapper
 import com.example.offlinebible.presentation.BooksCommunication
 import com.example.offlinebible.presentation.MainViewModel
 import com.example.offlinebible.presentation.ResourceProvider
+import io.realm.Realm
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class BibleApp : Application() {
 
@@ -28,9 +32,17 @@ class BibleApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        Realm.init(this)
+        val interceptor = HttpLoggingInterceptor()
+        interceptor.level = HttpLoggingInterceptor.Level.BODY
+        val client = OkHttpClient.Builder()
+            .addInterceptor(interceptor)
+            .build()
 
         val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
+            .client(client)
+            .addConverterFactory(GsonConverterFactory.create())
             .build()
         val service = retrofit.create(BooksService::class.java)
 
@@ -45,15 +57,17 @@ class BibleApp : Application() {
             booksCloudMapper,
             booksCacheMapper
         )
+        val booksDataToDomainMapper = BaseBooksDataToDomainMapper()
 
-        val booksInteractor: BooksInteractor = TODO()
+        val booksInteractor =  BooksInteractor.Base(booksRepository, booksDataToDomainMapper)
+        val communication = BooksCommunication.Base()
         mainViewModel = MainViewModel(
             booksInteractor,
             BaseBooksDomainToUiMapper(
-                BooksCommunication.Base(),
+                communication,
                 ResourceProvider.Base(this)
             ),
-            BooksCommunication.Base()
+            communication
         )
     }
 }

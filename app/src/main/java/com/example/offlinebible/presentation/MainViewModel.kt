@@ -11,17 +11,19 @@ import com.example.offlinebible.domain.BooksInteractor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.invoke
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainViewModel(
     private val booksInteractor: BooksInteractor,
-    private val mapper: BooksDomainToUiMapper,
+    private val mapper: BaseBooksDomainToUiMapper,
     private val communication: BooksCommunication
 ) : ViewModel() {
 
     fun fetchBooks() = viewModelScope.launch(Dispatchers.IO) {
-        val result = booksInteractor.fetchBooks().map(mapper)
-        Dispatchers.Main {
-            result.map(Abstract.Mapper.Empty())
+        val resultDomain = booksInteractor.fetchBooks()
+        withContext(Dispatchers.Main) {
+            val resultUi = resultDomain.map(mapper)
+            resultUi.map(Abstract.Mapper.Empty())
         }
     }
 
