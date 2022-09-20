@@ -33,10 +33,12 @@ class BibleApp : Application() {
     override fun onCreate() {
         super.onCreate()
         Realm.init(this)
-        val interceptor = HttpLoggingInterceptor()
-        interceptor.level = HttpLoggingInterceptor.Level.BODY
         val client = OkHttpClient.Builder()
-            .addInterceptor(interceptor)
+            .addInterceptor(
+                HttpLoggingInterceptor().apply {
+                    level = HttpLoggingInterceptor.Level.BODY
+                }
+            )
             .build()
 
         val retrofit = Retrofit.Builder()
@@ -59,7 +61,7 @@ class BibleApp : Application() {
         )
         val booksDataToDomainMapper = BaseBooksDataToDomainMapper()
 
-        val booksInteractor =  BooksInteractor.Base(booksRepository, booksDataToDomainMapper)
+        val booksInteractor = BooksInteractor.Base(booksRepository, booksDataToDomainMapper)
         val communication = BooksCommunication.Base()
         mainViewModel = MainViewModel(
             booksInteractor,
